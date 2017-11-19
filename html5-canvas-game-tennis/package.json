@@ -1,0 +1,15 @@
+{
+  "name": "my-first-game-try",
+  "version": "1.0.0",
+  "description": "simple html5 game using canvas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Yogesh",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.0"
+  }
+}

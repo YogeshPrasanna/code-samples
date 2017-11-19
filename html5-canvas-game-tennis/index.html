@@ -1,0 +1,53 @@
+<html>
+
+    <body>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+    </body>
+    
+    <script type="text/javascript">
+        var canvas;
+        var canvasContext;
+        var ballX = 100;
+        var ballSpeedX = 5;
+
+
+        window.onload = function () {
+            var framesPerSecond = 30;
+            canvas = document.getElementById("gameCanvas");
+            canvasContext = canvas.getContext('2d');
+
+            drawEverything();
+            setInterval(function () {
+                moveEverything();
+                drawEverything();
+            }, 1000 / framesPerSecond);
+        }
+
+        function moveEverything() {
+            ballX = ballX + ballSpeedX;
+            if (ballX > canvas.width) {
+                ballSpeedX = -ballSpeedX;
+            }
+            if (ballX < 0) {
+                ballSpeedX = -ballSpeedX;
+            }
+        }
+
+        function drawEverything() {
+            createRectangle(0, 0, canvas.width, canvas.height, 'lightgrey');
+            // creating a rectangle ball
+            createRectangle(ballX, 100, 25, 25,"orange");
+            // creating the left stick
+            createRectangle(10, canvas.height / 2 - 100, 10, 200, "white");
+            // creating the right stick 
+            createRectangle(canvas.width - 20, canvas.height / 2 - 100, 10, 200,"white");
+        }
+
+        function createRectangle(leftX, topY, width, height, fillColor) {
+            canvasContext.fillStyle = fillColor;
+            canvasContext.fillRect(leftX, topY, width, height);
+        }
+
+    </script>
+
+</html>
