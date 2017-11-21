@@ -1,53 +1,70 @@
 <html>
 
-    <body>
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
-    </body>
-    
-    <script type="text/javascript">
-        var canvas;
-        var canvasContext;
-        var ballX = 100;
-        var ballSpeedX = 5;
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+</body>
+
+<script type="text/javascript">
+    var canvas;
+    var canvasContext;
+    var ballX = 100;
+    var ballSpeedX = 5;
 
 
-        window.onload = function () {
-            var framesPerSecond = 30;
-            canvas = document.getElementById("gameCanvas");
-            canvasContext = canvas.getContext('2d');
+    window.onload = function () {
+        var framesPerSecond = 30;
+        canvas = document.getElementById("gameCanvas");
+        canvasContext = canvas.getContext('2d');
 
+        drawEverything();
+        setInterval(function () {
+            moveEverything();
             drawEverything();
-            setInterval(function () {
-                moveEverything();
-                drawEverything();
-            }, 1000 / framesPerSecond);
-        }
+        }, 1000 / framesPerSecond);
+    }
 
-        function moveEverything() {
-            ballX = ballX + ballSpeedX;
-            if (ballX > canvas.width) {
-                ballSpeedX = -ballSpeedX;
-            }
-            if (ballX < 0) {
-                ballSpeedX = -ballSpeedX;
-            }
-        }
+    function moveEverything() {
+        // changing the x position of the ball 
+        ballX = ballX + ballSpeedX;
 
-        function drawEverything() {
-            createRectangle(0, 0, canvas.width, canvas.height, 'lightgrey');
-            // creating a rectangle ball
-            createRectangle(ballX, 100, 25, 25,"orange");
-            // creating the left stick
-            createRectangle(10, canvas.height / 2 - 100, 10, 200, "white");
-            // creating the right stick 
-            createRectangle(canvas.width - 20, canvas.height / 2 - 100, 10, 200,"white");
+        // checking for boundaries
+        if (ballX > canvas.width) {
+            ballSpeedX = -ballSpeedX;
         }
-
-        function createRectangle(leftX, topY, width, height, fillColor) {
-            canvasContext.fillStyle = fillColor;
-            canvasContext.fillRect(leftX, topY, width, height);
+        if (ballX < 0) {
+            ballSpeedX = -ballSpeedX;
         }
+    }
 
-    </script>
+    function drawEverything() {
+        // creting the play area / court
+        createRectangle(0, 0, canvas.width, canvas.height, 'lightgrey');
+
+        // creating a ball 
+        /* ballX : initial : first value -  var ball x
+           ballX : since second call : changes x position in moveEverythig Changes - for movement effect 
+        */
+        createCircle(ballX, 100, 10, "orange");
+
+        // creating the left stick
+        createRectangle(10, canvas.height / 2 - 100, 10, 200, "white");
+
+        // creating the right stick 
+        createRectangle(canvas.width - 20, canvas.height / 2 - 100, 10, 200, "white");
+    }
+
+    function createCircle(left, top , radius, ballColor){
+        canvasContext.fillStyle = ballColor;
+        canvasContext.beginPath();
+        canvasContext.arc(left, top, radius, 0, Math.PI * 2, true);
+        canvasContext.fill();
+    }
+
+    function createRectangle(leftX, topY, width, height, fillColor) {
+        canvasContext.fillStyle = fillColor;
+        canvasContext.fillRect(leftX, topY, width, height);
+    }
+
+</script>
 
 </html>
