@@ -7,14 +7,39 @@
 <script type="text/javascript">
     var canvas;
     var canvasContext;
+
     var ballX = 100;
     var ballSpeedX = 5;
+
+    var ballY = 100;
+    var ballSpeedY = 5;
+
+    var leftStickY = 200;
+    var rightStickY = 200;
+    const rightStickHeight = 100;
+    const leftStickHeight = 100;
+
+    function calculateMousePosition(e) {
+        var rect = canvas.getBoundingClientRect();
+        var root = document.documentElement;
+        var mouseX = e.clientX - rect.left - root.scrollLeft;
+        var mouseY = e.clientY - rect.top - root.scrollTop;
+        return {
+            x: mouseX,
+            y: mouseY
+        }
+    }
 
 
     window.onload = function () {
         var framesPerSecond = 30;
         canvas = document.getElementById("gameCanvas");
         canvasContext = canvas.getContext('2d');
+
+        canvas.addEventListener("mousemove", function (e) {
+            var mousePosition = calculateMousePosition(e);
+            leftStickY = mousePosition.y - (leftStickHeight / 2);
+        })
 
         drawEverything();
         setInterval(function () {
@@ -23,16 +48,36 @@
         }, 1000 / framesPerSecond);
     }
 
+    function resetBall(){
+        ballX = canvas.width / 2;
+        ballY = canvas.height / 2;
+    }
+
     function moveEverything() {
         // changing the x position of the ball 
         ballX = ballX + ballSpeedX;
 
-        // checking for boundaries
+        // changing the y position of the same ball
+        ballY = ballY + ballSpeedY;
+
+        // checking for boundaries left and right - basically x axis
         if (ballX > canvas.width) {
             ballSpeedX = -ballSpeedX;
         }
         if (ballX < 0) {
-            ballSpeedX = -ballSpeedX;
+            if(ballY > leftStickY && ballY < leftStickY + leftStickHeight ) {
+                ballSpeedX = -ballSpeedX;
+            } else {
+                resetBall();                
+            }
+        }
+
+        // checking for boundaries top and bottom - basically y axis 
+        if (ballY > canvas.height) {
+            ballSpeedY = -ballSpeedY;
+        }
+        if (ballY < 0) {
+            ballSpeedY = -ballSpeedY;
         }
     }
 
@@ -44,16 +89,16 @@
         /* ballX : initial : first value -  var ball x
            ballX : since second call : changes x position in moveEverythig Changes - for movement effect 
         */
-        createCircle(ballX, 100, 10, "orange");
+        createCircle(ballX, ballY, 10, "orange");
 
         // creating the left stick
-        createRectangle(10, canvas.height / 2 - 100, 10, 200, "white");
+        createRectangle(10, leftStickY, 10, leftStickHeight, "white");
 
         // creating the right stick 
-        createRectangle(canvas.width - 20, canvas.height / 2 - 100, 10, 200, "white");
+        createRectangle(canvas.width - 20, rightStickY, 10, rightStickHeight, "white");
     }
 
-    function createCircle(left, top , radius, ballColor){
+    function createCircle(left, top, radius, ballColor) {
         canvasContext.fillStyle = ballColor;
         canvasContext.beginPath();
         canvasContext.arc(left, top, radius, 0, Math.PI * 2, true);
@@ -64,7 +109,6 @@
         canvasContext.fillStyle = fillColor;
         canvasContext.fillRect(leftX, topY, width, height);
     }
-
 </script>
 
 </html>
